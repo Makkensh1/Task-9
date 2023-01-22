@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update user</title>
+    <title>Thymeleaf Variables</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+<div class="container">
+    <hr>
+    <h2>Update User</h2>
+
+    <form action="#" th:action="@{/admin/update}" th:object="${user}"
+          method="POST">
+
+        <!-- Add hidden form field to handle update -->
+        <input type="hidden" th:field="*{id}" id="id"/>
+        <p th:text="name">name</p>
+        <input type="text" th:field="*{name}" id="name" class="form-control mb-4 col-4">
+        <p th:text="lastName">lastName</p>
+        <input type="text" th:field="*{lastName}" id="lastName" class="form-control mb-4 col-4">
+        <p th:text="email">email</p>
+        <input type="text" th:field="*{email}" id="email" class="form-control mb-4 col-4">
+        <p th:text="password">password</p>
+        <input type="text" th:field="*{password}" id="password" class="form-control mb-4 col-4">
+
+        <th:block th:each="role: ${allRoles}">
+            <input type="checkbox" th:field="*{roles}"
+                   th:text="${role.name}" th:value="${role.id}" class="m-2" />
+        </th:block>
+
+        <button type="submit" class="btn btn-info col-2"> Update User</button>
+    </form>
+
+    <hr>
+
+    <a th:href = "@{/admin/users}"> Back to User List</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <h1>User Management System</h1>
+    <hr>
+    <h2>Save new user</h2>
+
+    <form action="#" th:action="@{/admin/save}" th:object="${user}"
+          method="POST">
+        <p th:text="name">name</p>
+        <input type="text" th:field="*{name}" >
+        <p th:text="email">email</p>
+        <input type="text" th:field="*{email}">
+        <p th:text="lastName">lastName</p>
+        <input type="text" th:field="*{lastName}">
+        <p th:text="password">password</p>
+        <input type="text" th:field="*{password}">
+        <p th:text="role">choose role</p>
+
+        <th:block th:each="role: ${allRoles}">
+            <input type="checkbox" th:field="*{roles}"
+                   th:text="${role.name}" th:value="${role.id}" class="m-2" />
+        </th:block>
+
+
+        <button type="submit" class="btn btn-info col-2">Save
+            user</button>
+    </form>
+
+    <hr>
+
+    <a th:href="@{/admin/users}"> Back to user List</a>
+</div>
+
+<div sec:authorize="isAuthenticated()">
+    <a href="javascript: document.logoutForm.submit()" class="dropdown-toggle">Sign out</a>
+    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <input hidden type="submit" value="Sign Out" />
+    </form>
+</div>
+</body>
+</html>

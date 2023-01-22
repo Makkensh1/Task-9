@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>users</title>
+    <title>Thymeleaf Variables</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+    <a th:href="@{/admin/addNew}" class="btn btn-primary btn-sm mb-3">Add user</a>
+    <div>
+        <table border="1">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Last Name</th>
+                <th>Role</th>
+                <th>Action</th>
+
+            </tr>
+            <tr th:if="${users1.isEmpty()}">
+                <td colspan="5"> No Users Available </td>
+            </tr>
+            <tr th:each="user:${users1}">
+                <td th:text="${user.getName()}"></td>
+                <td th:text="${user.getEmail()}"></td>
+                <td th:text="${user.getLastName()}"></td>
+                <td th:text="${user.getRolesAsString()}"></td>
+                <td>
+                    <a th:href="@{/admin/delete/{id}(id=${user.getId()})}"
+                       class="btn btn-danger">Delete</a>
+                    <a th:href="@{/admin/update/{id}(id=${user.id})}"
+                       class="btn btn-primary">Update</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <a href="javascript: document.logoutForm.submit()" class="dropdown-toggle">Sign out</a>
+        <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+            <input hidden type="submit" value="Sign Out" />
+        </form>
+    </div>
+</body>
+</html>
