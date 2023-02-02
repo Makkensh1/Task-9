@@ -1,7 +1,7 @@
 package ru.itmentor.spring.boot_security.demo.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.model.User;
@@ -10,7 +10,7 @@ import ru.itmentor.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -23,50 +23,35 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public String getUsers(Model model) {
-        model.addAttribute("users1", userService.listUsers());
-        return "users";
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.listUsers());
     }
 
-    @RequestMapping("")
-    public String adminMain() {
-        return "admin";
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUser(@PathVariable long id) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 
-    @GetMapping("/update/{id}")
-    public String updateUser(@PathVariable(value = "id") Long id, Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
-        user.setId(id);
-        List<Role> roleList = roleService.getAllRoles();
-        model.addAttribute("allRoles", roleList);
-        return "update";
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        return ResponseEntity.ok(roleService.getAllRoles());
     }
 
-    @PostMapping("update")
-    public String update(@ModelAttribute("user") User user) {
-        userService.update(user);
-        return "redirect:/admin/users";
-    }
-
-    @GetMapping("delete/{id}")
-    public String deleteUser(@PathVariable(value = "id") Long id) {
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
-        return "redirect:/admin/users";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/save")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.addUser(user);
-        return "redirect:/admin/users";
+    @PostMapping("/users")
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        userService.update(user);
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/addNew")
-    public String addNewUser(Model model) {
-        List<Role> roleList = roleService.getAllRoles();
-        model.addAttribute("allRoles", roleList);
-        User user = new User();
-        model.addAttribute("user", user);
-        return "newUser";
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id) {
+        userService.update(user);
+        return ResponseEntity.ok(user);
     }
 }
